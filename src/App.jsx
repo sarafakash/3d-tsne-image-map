@@ -189,7 +189,7 @@ function Scene({ data, setIsZoomed }) {
 
       <Canvas
         style={{ position: "relative", zIndex: 2 }}
-        camera={{ position: [0, 0, 500], fov: 90, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 0, 400], fov: 90, near: 0.1, far: 1000 }}
       >
         <SceneContent
           data={data}
@@ -212,7 +212,7 @@ export default function App() {
   const [renderingComplete, setRenderingComplete] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading");
   const [dots, setDots] = useState(1); // To control dot animation
-  const maxChunks = 500;
+  const maxChunks = 300;
 
   // Dot Animation Effect
   useEffect(() => {
@@ -236,7 +236,7 @@ export default function App() {
         const avgZ = chunkData.reduce((sum, d) => sum + d.z, 0) / chunkData.length;
 
         // Increase the scale to spread points more and add slight random jitter
-        const scale = 50;
+        const scale = 30;
         const jitter = () => (Math.random() - 0.5) * 2;
         const spacedData = chunkData.map((d) => ({
           ...d,
