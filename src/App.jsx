@@ -9,20 +9,28 @@ function ImagePoint({ x, y, z, img, title, onSelect }) {
   const [texture, setTexture] = useState(null);
   const [hovered, setHovered] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-    const loader = new THREE.TextureLoader();
-    const dataURL = `data:image/jpeg;base64,${img}`;
+useEffect(() => {
+  let isMounted = true;
+  const loader = new THREE.TextureLoader();
+  const dataURL = `data:image/jpeg;base64,${img}`;
 
-    loader.load(dataURL, (tex) => {
-      if (isMounted) setTexture(tex);
-    });
+  loader.load(dataURL, (tex) => {
+    if (isMounted) setTexture(tex);
+  });
 
-    return () => {
-      isMounted = false;
-      if (texture) texture.dispose();
-    };
-  }, [img]);
+  return () => {
+    isMounted = false;
+    document.body.style.cursor = "default";
+  };
+}, [img]);
+
+// Dispose texture on unmount only
+useEffect(() => {
+  return () => {
+    if (texture) texture.dispose();
+  };
+}, []);
+
 
   const handleClick = () => {
     if (!meshRef.current) return;
@@ -42,8 +50,12 @@ function ImagePoint({ x, y, z, img, title, onSelect }) {
       onPointerOver={(e) => {
         e.stopPropagation();
         setHovered(true);
+        document.body.style.cursor = "pointer"; // Change cursor on hover
       }}
-      onPointerOut={() => setHovered(false)}
+      onPointerOut={() => {
+        setHovered(false);
+        document.body.style.cursor = "default"; // Revert cursor
+      }}
       onClick={(e) => {
         e.stopPropagation();
         handleClick();
@@ -59,6 +71,7 @@ function ImagePoint({ x, y, z, img, title, onSelect }) {
     </mesh>
   );
 }
+
 
 function SceneContent({ data, targetRef, controlsRef, setIsZoomed }) {
   const { camera } = useThree();
@@ -138,9 +151,10 @@ function Scene({ data, setIsZoomed }) {
   // Reset the camera to the initial zoomed-out position
   const handleReset = () => {
     if (controlsRef.current) {
-      controlsRef.current.object.position.set(0, 0, 500); // Reset to initial position
-      controlsRef.current.target.set(0, 0, 0); // Look at the center
+      controlsRef.current.object.position.set(0, 0, 500);
+      controlsRef.current.target.set(0, 0, 0);
       controlsRef.current.update();
+      targetRef.current = null;
       setIsZoomed(false);
     }
   };
@@ -148,7 +162,9 @@ function Scene({ data, setIsZoomed }) {
   // Zoom in the camera
   const handleZoomIn = () => {
     if (controlsRef.current) {
-      controlsRef.current.object.position.z -= 50; // Move closer
+      targetRef.current = null; // Cancel any active camera transition
+      controlsRef.current.enableZoom = true;
+      controlsRef.current.object.translateZ(-50); // Zoom in
       controlsRef.current.update();
     }
   };
@@ -156,12 +172,13 @@ function Scene({ data, setIsZoomed }) {
   // Zoom out the camera
   const handleZoomOut = () => {
     if (controlsRef.current) {
-      controlsRef.current.object.position.z += 50; // Move farther
+      targetRef.current = null;
+      controlsRef.current.enableZoom = true;
+      controlsRef.current.object.translateZ(50); // Zoom out
       controlsRef.current.update();
     }
   };
 
-  // Common button style
   const buttonStyle = {
     background: "#333",
     color: "#fff",
@@ -180,16 +197,15 @@ function Scene({ data, setIsZoomed }) {
 
   return (
     <>
-      {/* Zoom and Reset Buttons */}
       <div style={{ position: "absolute", top: "15px", right: "15px", zIndex: 20 }}>
         <button onClick={handleZoomIn} style={buttonStyle} title="Zoom In">➕</button>
         <button onClick={handleZoomOut} style={buttonStyle} title="Zoom Out">➖</button>
-        <button onClick={handleReset} style={buttonStyle} title="Reset Zoom">🔃</button>
+        <button onClick={handleReset} style={buttonStyle} title="Reset Zoom">🔁</button>
       </div>
 
       <Canvas
         style={{ position: "relative", zIndex: 2 }}
-        camera={{ position: [0, 0, 400], fov: 90, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 0, 300], fov: 90, near: 0.1, far: 1000 }}
       >
         <SceneContent
           data={data}
@@ -204,15 +220,16 @@ function Scene({ data, setIsZoomed }) {
 
 
 
+
 export default function App() {
   const [tsneData, setTsneData] = useState([]);
   const [isZoomed, setIsZoomed] = useState(false);
   const [chunkIndex, setChunkIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [renderingComplete, setRenderingComplete] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Loading");
+  const [loadingMessage, setLoadingMessage] = useState("🔮CS5660 Final Project: Presented By");
   const [dots, setDots] = useState(1); // To control dot animation
-  const maxChunks = 300;
+  const maxChunks = 180;
 
   // Dot Animation Effect
   useEffect(() => {
@@ -236,7 +253,7 @@ export default function App() {
         const avgZ = chunkData.reduce((sum, d) => sum + d.z, 0) / chunkData.length;
 
         // Increase the scale to spread points more and add slight random jitter
-        const scale = 30;
+        const scale = 35;
         const jitter = () => (Math.random() - 0.5) * 2;
         const spacedData = chunkData.map((d) => ({
           ...d,
@@ -249,7 +266,7 @@ export default function App() {
 
         // Set loading complete only after all chunks are loaded
         if (index >= maxChunks - 1) {
-          setLoadingMessage("Rendering");
+          setLoadingMessage("Nikhil Dhiman, Akash Saraf, Yamini Mandadi🚀.");
           setLoading(false);
 
           // Introduce a slight delay to allow the rendering to catch up
