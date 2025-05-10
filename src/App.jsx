@@ -266,7 +266,7 @@ export default function App() {
 
         // Set loading complete only after all chunks are loaded
         if (index >= maxChunks - 1) {
-          setLoadingMessage("Nikhil Dhiman, Akash Saraf, Yamini Mandadi🚀.");
+          setLoadingMessage("Nikhil Dhiman, Yamini Mandadi, Akash Saraf🚀.");
           setLoading(false);
 
           // Introduce a slight delay to allow the rendering to catch up
