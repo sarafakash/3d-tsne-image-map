@@ -201,6 +201,13 @@ function Scene({ data, setIsZoomed }) {
         <button onClick={handleZoomIn} style={buttonStyle} title="Zoom In">➕</button>
         <button onClick={handleZoomOut} style={buttonStyle} title="Zoom Out">➖</button>
         <button onClick={handleReset} style={buttonStyle} title="Reset Zoom">🔁</button>
+        <button
+          onClick={() => window.open("https://github.com/NikhilDhiman/Artwork-Mapped-Using-ML", "_blank")}
+          style={buttonStyle}
+          title="View on GitHub"
+        >
+        Git
+        </button>
       </div>
 
       <Canvas
@@ -266,7 +273,7 @@ export default function App() {
 
         // Setting the loading complete only after all chunks are loaded
         if (index >= maxChunks - 1) {
-          setLoadingMessage("🔮Art Work Map using Machine Learning 🚀.");
+          setLoadingMessage("Rendering Map.");
           setLoading(false);
 
           // Introduce a slight delay to allow the rendering to catch up
