@@ -227,20 +227,20 @@ export default function App() {
   const [chunkIndex, setChunkIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [renderingComplete, setRenderingComplete] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("🔮CS5660 Final Project: Presented By");
-  const [dots, setDots] = useState(1); // To control dot animation
+  const [loadingMessage, setLoadingMessage] = useState("🔮Art Work Map using Machine Learning ");
+  const [dots, setDots] = useState(1); 
   const maxChunks = 180;
 
-  // Dot Animation Effect
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      setDots((prev) => (prev % 3) + 1); // Cycle through 1, 2, 3 dots
-    }, 300); // Update every 300 ms
+      setDots((prev) => (prev % 3) + 1); 
+    }, 300); 
 
     return () => clearInterval(interval);
   }, []);
 
-  // Chunk Loading Function
+  
   const loadChunk = async (index) => {
     try {
       const response = await fetch(`/chunks/chunk_${index}.json`);
@@ -264,9 +264,9 @@ export default function App() {
 
         setTsneData((prev) => [...prev, ...spacedData]);
 
-        // Set loading complete only after all chunks are loaded
+        // Setting the loading complete only after all chunks are loaded
         if (index >= maxChunks - 1) {
-          setLoadingMessage("Nikhil Dhiman, Yamini Mandadi, Akash Saraf🚀.");
+          setLoadingMessage("🔮Art Work Map using Machine Learning 🚀.");
           setLoading(false);
 
           // Introduce a slight delay to allow the rendering to catch up
@@ -298,7 +298,7 @@ export default function App() {
         position: "relative",
       }}
     >
-      {(!renderingComplete || loading) && ( // Keep spinner until fully rendered
+      {(!renderingComplete || loading) && ( 
         <div
           style={{
             position: "absolute",
@@ -307,7 +307,7 @@ export default function App() {
             transform: "translate(-50%, -50%)",
             textAlign: "center",
             color: "white",
-            zIndex: 10, // Ensure it's on top
+            zIndex: 10, 
           }}
         >
           <ClipLoader color="#ffffff" size={50} />
